@@ -11,8 +11,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      home: DashboardOfFragment(),
+    return MaterialApp(
+      theme: ThemeData(),
+      home: const DashboardOfFragment(),
       debugShowCheckedModeBanner: false,
     );
   }
