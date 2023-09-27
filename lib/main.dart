@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
 import 'package:socialmediafeedapp/firebase_options.dart';
 import 'package:socialmediafeedapp/users/fragments/dashboard_fragment.dart';
 
