@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:socialmediafeedapp/users/fragments/home_fragment.dart';
 import 'package:socialmediafeedapp/users/fragments/upload_item.dart';
 
@@ -21,8 +23,34 @@ class DashboardOfFragment extends StatelessWidget {
       "label": "Add",
     }
   ];
+
+  final RxInt _indexNumber = 0.obs;
+
   @override
   Widget build(BuildContext context) {
-    return ();
+    return GetBuilder(
+      builder: (controller) {
+        return Scaffold(
+          body: SafeArea(child: Obx(() => _fragmentScreen[_indexNumber.value])),
+          bottomNavigationBar: Obx(() => BottomNavigationBar(
+              currentIndex: _indexNumber.value,
+              onTap: (value) {
+                _indexNumber.value = value;
+              },
+              showSelectedLabels: true,
+              showUnselectedLabels: true,
+              selectedItemColor: Colors.white,
+              unselectedItemColor: Colors.white24,
+              items: List.generate(2, (index) {
+                var navBtnProperty = _navigationButtonProperties[index];
+                return BottomNavigationBarItem(
+                    backgroundColor: Colors.black,
+                    icon: Icon(navBtnProperty["non_active_icon"]),
+                    activeIcon: Icon(navBtnProperty["active_icon"]),
+                    label: navBtnProperty["label"]);
+              }))),
+        );
+      },
+    );
   }
 }
