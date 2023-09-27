@@ -9,6 +9,7 @@ import 'package:socialmediafeedapp/users/fragments/dashboard_fragment.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  //await Firebase.initializeApp();
   if (kIsWeb || Platform.isAndroid || Platform.isIOS) {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,

@@ -1,4 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:socialmediafeedapp/users/service/upload_item_service.dart';
 
 class UploadItemFragmentScreen extends StatefulWidget {
   const UploadItemFragmentScreen({super.key});
@@ -10,6 +13,7 @@ class UploadItemFragmentScreen extends StatefulWidget {
 
 class _UploadItemFragmentScreenState extends State<UploadItemFragmentScreen> {
   var formKey = GlobalKey<FormState>();
+
   //tarih eklenir
   final TextEditingController _titleText = TextEditingController();
   final TextEditingController _bodytext = TextEditingController();
@@ -62,7 +66,14 @@ class _UploadItemFragmentScreenState extends State<UploadItemFragmentScreen> {
                               color: Colors.black,
                               borderRadius: BorderRadius.circular(20),
                               child: InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  if (formKey.currentState!.validate()) {
+                                    UploadItemService().uploadItem(
+                                        _titleText.text, _bodytext.text);
+                                  }
+                                  Fluttertoast.showToast(
+                                      msg: "Upload item succesfully");
+                                },
                                 child: const Padding(
                                   padding: EdgeInsets.symmetric(
                                     vertical: 10,
