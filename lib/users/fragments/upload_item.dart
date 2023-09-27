@@ -11,6 +11,8 @@ class UploadItemFragmentScreen extends StatefulWidget {
 class _UploadItemFragmentScreenState extends State<UploadItemFragmentScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Container(
+      color: Colors.red,
+    );
   }
 }

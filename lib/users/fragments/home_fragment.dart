@@ -10,6 +10,6 @@ class HomeFragmentScreen extends StatefulWidget {
 class _HomeFragmentScreenState extends State<HomeFragmentScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Container();
   }
 }
