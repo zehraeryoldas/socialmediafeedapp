@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
+
 import 'package:socialmediafeedapp/users/fragments/home_fragment.dart';
 import 'package:socialmediafeedapp/users/fragments/upload_item.dart';
-import 'package:get/get.dart';
 
 class DashboardOfFragment extends StatefulWidget {
   const DashboardOfFragment({super.key});
