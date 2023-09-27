@@ -43,9 +43,10 @@ class _DashboardOfFragmentState extends State<DashboardOfFragment> {
               });
             },
             showSelectedLabels: true,
+            iconSize: 40,
             showUnselectedLabels: true,
-            selectedItemColor: Colors.red,
-            unselectedItemColor: Colors.red.shade200,
+            selectedItemColor: Colors.deepPurple,
+            unselectedItemColor: Colors.black54,
             items: List.generate(2, (index) {
               var navBtnProperty = _navigationButtonProperties[index];
               return BottomNavigationBarItem(
