@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
+import 'package:image_picker/image_picker.dart';
 import 'package:socialmediafeedapp/users/service/upload_item_service.dart';
 
 class UploadItemFragmentScreen extends StatefulWidget {
@@ -17,6 +19,7 @@ class _UploadItemFragmentScreenState extends State<UploadItemFragmentScreen> {
   //tarih eklenir
   final TextEditingController _titleText = TextEditingController();
   final TextEditingController _bodytext = TextEditingController();
+
   //resim alınacak
 
   @override
@@ -53,6 +56,7 @@ class _UploadItemFragmentScreenState extends State<UploadItemFragmentScreen> {
                       key: formKey,
                       child: Column(
                         children: [
+                          //   showDialogBoxForImagePickingAndCapturing(),
                           _myTextFormField(_titleText,
                               "please write text title", "Text title"),
                           const SizedBox(
