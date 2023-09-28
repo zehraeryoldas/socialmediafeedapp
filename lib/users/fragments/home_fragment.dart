@@ -11,55 +11,86 @@ class HomeFragmentScreen extends StatefulWidget {
 }
 
 class _HomeFragmentScreenState extends State<HomeFragmentScreen> {
+  final Stream<QuerySnapshot> _itemsStream =
+      FirebaseFirestore.instance.collection('items').snapshots();
   final TextEditingController _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-              gradient:
-                  LinearGradient(colors: [Colors.black54, Colors.deepPurple])),
-        ),
-        automaticallyImplyLeading: false,
-        title: const Text("Home page"),
-        centerTitle: true,
-      ),
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 60,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.deepPurple)),
-              child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                    label: const Text("Search"),
-                    prefixIcon: const Icon(
-                      Icons.search,
-                      size: 30,
-                    ),
-                    border: InputBorder.none,
-                    suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _searchController.clear();
-                          });
-                        },
-                        icon: const Icon(
-                          Icons.clear,
-                          size: 30,
-                        ))),
-              ),
-            ),
+        appBar: AppBar(
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [Colors.black54, Colors.deepPurple])),
           ),
-          GridviewBuilderWidget(),
-        ],
-      ),
-    );
+          automaticallyImplyLeading: false,
+          title: const Text("Home page"),
+          centerTitle: true,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: StreamBuilder<QuerySnapshot>(
+            stream: _itemsStream,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator(); // veri bekleniyor göstergesi
+              } else if (snapshot.hasError) {
+                return Text('Bir hata oluştu: ${snapshot.error}');
+              }
+              return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  DocumentSnapshot data = snapshot.data!.docs[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.35,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.red),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        // mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.network(
+                            "https://cdn.pixabay.com/photo/2017/11/29/09/15/paint-2985569_1280.jpg",
+                            width: MediaQuery.of(context).size.width,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          ListTile(
+                            title: Text(
+                              data['title_text'],
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Text(
+                              data['body_text'],
+                              style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            trailing: Text(data['time_stamp'].toString()),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        )
+        //GridviewBuilderWidget(),
+
+        );
   }
 }
