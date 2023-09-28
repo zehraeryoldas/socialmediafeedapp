@@ -11,8 +11,10 @@ class HomeFragmentScreen extends StatefulWidget {
 }
 
 class _HomeFragmentScreenState extends State<HomeFragmentScreen> {
-  final Stream<QuerySnapshot> _itemsStream =
-      FirebaseFirestore.instance.collection('items').snapshots();
+  final Stream<QuerySnapshot> _itemsStream = FirebaseFirestore.instance
+      .collection('items')
+      .orderBy("time_stamp", descending: true)
+      .snapshots();
   final TextEditingController _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
