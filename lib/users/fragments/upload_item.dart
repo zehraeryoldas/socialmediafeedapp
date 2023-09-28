@@ -1,9 +1,15 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 import 'package:socialmediafeedapp/users/service/upload_item_service.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:path/path.dart';
 
 class UploadItemFragmentScreen extends StatefulWidget {
   const UploadItemFragmentScreen({super.key});
@@ -19,6 +25,57 @@ class _UploadItemFragmentScreenState extends State<UploadItemFragmentScreen> {
   //tarih eklenir
   final TextEditingController _titleText = TextEditingController();
   final TextEditingController _bodytext = TextEditingController();
+  TextEditingController imagesController = TextEditingController();
+  firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
+  File? _photo;
+  final ImagePicker _picker = ImagePicker();
+  Future imgFromGallery() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _photo = File(pickedFile.path);
+        uploadFile(); // Resim yükleme işlemini başlat
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  Future imgFromCamera() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      if (pickedFile != null) {
+        _photo = File(pickedFile.path);
+        uploadFile(); // Resim yükleme işlemini başlat
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  String? indirmeBaglantisi;
+  Future uploadFile() async {
+    if (_photo == null) return;
+    final fileName = basename(_photo!.path);
+    final destination = 'files/$fileName';
+
+    try {
+      final ref = firebase_storage.FirebaseStorage.instance
+          .ref(destination)
+          .child('file/');
+      ref.putFile(_photo!);
+      String url = await (await ref.putFile(_photo!)).ref.getDownloadURL();
+      setState(() {
+        indirmeBaglantisi = url;
+        imagesController.text = url; // Resim URL'sini kontrolcüye ekleyin
+      });
+    } catch (e) {
+      print('error occured');
+    }
+  }
 
   //resim alınacak
 
@@ -40,14 +97,7 @@ class _UploadItemFragmentScreenState extends State<UploadItemFragmentScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: const [
-                  BoxShadow(
-                    blurRadius: 8,
-                    color: Colors.black26,
-                    offset: Offset(0, -3),
-                  )
-                ]),
+                borderRadius: BorderRadius.circular(20), boxShadow: const []),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10, 30, 10, 8),
               child: Column(
@@ -66,14 +116,20 @@ class _UploadItemFragmentScreenState extends State<UploadItemFragmentScreen> {
                               "Body title"),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
+                            child: imageMethod(context),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
                             child: Material(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.deepPurple,
+                              borderRadius: BorderRadius.circular(10),
                               child: InkWell(
                                 onTap: () {
                                   if (formKey.currentState!.validate()) {
                                     UploadItemService().uploadItem(
-                                        _titleText.text, _bodytext.text);
+                                        _titleText.text,
+                                        _bodytext.text,
+                                        imagesController.text);
                                   }
                                   Fluttertoast.showToast(
                                       msg: "Upload item succesfully");
@@ -85,7 +141,10 @@ class _UploadItemFragmentScreenState extends State<UploadItemFragmentScreen> {
                                   ),
                                   child: Text(
                                     "Upload new",
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ),
@@ -102,32 +161,92 @@ class _UploadItemFragmentScreenState extends State<UploadItemFragmentScreen> {
     );
   }
 
+  GestureDetector imageMethod(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        _showPicker(context);
+      },
+      child: CircleAvatar(
+        radius: 55,
+        backgroundColor: Colors.deepPurple,
+        child: _photo != null
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.file(
+                  _photo!,
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.fitHeight,
+                ),
+              )
+            : Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(50)),
+                width: 100,
+                height: 100,
+                child: Lottie.network(
+                    "https://assets7.lottiefiles.com/packages/lf20_urbk83vw.json")),
+      ),
+    );
+  }
+
+  void _showPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: Wrap(
+                children: <Widget>[
+                  ListTile(
+                      leading: const Icon(Icons.photo_library),
+                      title: const Text('Gallery'),
+                      onTap: () {
+                        imgFromGallery();
+                        Navigator.of(context).pop();
+                      }),
+                  ListTile(
+                    leading: const Icon(Icons.photo_camera),
+                    title: const Text('Camera'),
+                    onTap: () {
+                      imgFromCamera();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   TextFormField _myTextFormField(
       TextEditingController controller, String metin, String hintext) {
     return TextFormField(
       decoration: InputDecoration(
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(
-            color: Colors.white60,
+            color: Colors.deepPurple,
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(
-            color: Colors.white60,
+            color: Colors.deepPurple,
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(
-            color: Colors.red,
+            color: Colors.deepPurple,
           ),
         ),
         disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(
-            color: Colors.white60,
+            color: Colors.deepPurple,
           ),
         ),
         contentPadding: const EdgeInsets.symmetric(
