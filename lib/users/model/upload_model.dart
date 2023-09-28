@@ -1,19 +1,19 @@
 class UploadItem {
   String? titleText;
   String? bodyText;
+  String? images;
 
-  UploadItem({
-    this.titleText,
-    this.bodyText,
-  });
+  UploadItem({this.titleText, this.bodyText, this.images});
 
   UploadItem copyWith({
     String? titleText,
     String? bodyText,
+    String? images,
   }) {
     return UploadItem(
       titleText: titleText ?? this.titleText,
       bodyText: bodyText ?? this.bodyText,
+      images: images ?? this.images,
     );
   }
 
@@ -21,6 +21,7 @@ class UploadItem {
     return {
       'title_text': titleText,
       'body_text': bodyText,
+      'images': images,
     };
   }
 
@@ -28,14 +29,16 @@ class UploadItem {
     return UploadItem(
       titleText: json['title_text'] as String?,
       bodyText: json['body_text'] as String?,
+      images: json['images'] as String?,
     );
   }
 
   @override
-  String toString() => "UploadItem(titleText: $titleText,bodyText: $bodyText)";
+  String toString() =>
+      "UploadItem(titleText: $titleText,bodyText: $bodyText,images:$images)";
 
   @override
-  int get hashCode => Object.hash(titleText, bodyText);
+  int get hashCode => Object.hash(titleText, bodyText, images);
 
   @override
   bool operator ==(Object other) =>
@@ -43,5 +46,6 @@ class UploadItem {
       other is UploadItem &&
           runtimeType == other.runtimeType &&
           titleText == other.titleText &&
-          bodyText == other.bodyText;
+          bodyText == other.bodyText &&
+          images == other.images;
 }
