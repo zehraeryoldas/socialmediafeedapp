@@ -4,10 +4,11 @@ import 'package:intl/intl.dart';
 
 class UploadItemService {
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  Future<String?> uploadItem(String? titleText, String? bodyText) async {
+  Future<String?> uploadItem(
+      String? titleText, String? bodyText, String? images) async {
     try {
       UploadItem uploadItem =
-          UploadItem(titleText: titleText, bodyText: bodyText);
+          UploadItem(titleText: titleText, bodyText: bodyText, images: images);
 
       DocumentReference result = await FirebaseFirestore.instance
           .collection("items") // Firestore koleksiyonunun adını buraya ekleyin
