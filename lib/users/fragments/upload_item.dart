@@ -115,11 +115,11 @@ class _UploadItemFragmentScreenState extends State<UploadItemFragmentScreen> {
                           _myTextFormField(_bodytext, "please write body title",
                               "Body title"),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(24.0),
                             child: imageMethod(context),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(18.0),
                             child: Material(
                               color: Colors.deepPurple,
                               borderRadius: BorderRadius.circular(10),
@@ -221,44 +221,55 @@ class _UploadItemFragmentScreenState extends State<UploadItemFragmentScreen> {
         });
   }
 
-  TextFormField _myTextFormField(
+  Container _myTextFormField(
       TextEditingController controller, String metin, String hintext) {
-    return TextFormField(
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(
-            color: Colors.deepPurple,
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.black,
+          boxShadow: const [
+            BoxShadow(
+                offset: Offset(0, 3),
+                blurRadius: 3,
+                color: Colors.deepPurpleAccent)
+          ]),
+      child: TextFormField(
+        decoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Colors.deepPurple,
+            ),
           ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(
-            color: Colors.deepPurple,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Colors.deepPurple,
+            ),
           ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(
-            color: Colors.deepPurple,
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Colors.deepPurple,
+            ),
           ),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(
-            color: Colors.deepPurple,
+          disabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Colors.deepPurple,
+            ),
           ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 6,
+          ),
+          fillColor: Colors.white,
+          filled: true,
+          hintText: hintext,
         ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 6,
-        ),
-        fillColor: Colors.white,
-        filled: true,
-        hintText: hintext,
+        controller: controller,
+        validator: (value) => value == "" ? metin : null,
       ),
-      controller: controller,
-      validator: (value) => value == "" ? metin : null,
     );
   }
 }
