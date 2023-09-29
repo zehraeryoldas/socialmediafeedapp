@@ -36,6 +36,7 @@ class _DashboardOfFragmentState extends State<DashboardOfFragment> {
     return Scaffold(
         body: _fragmentScreen[_indexNumber],
         bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: Colors.black,
             currentIndex: _indexNumber,
             onTap: (value) {
               setState(() {
@@ -46,7 +47,7 @@ class _DashboardOfFragmentState extends State<DashboardOfFragment> {
             iconSize: 40,
             showUnselectedLabels: true,
             selectedItemColor: Colors.deepPurple,
-            unselectedItemColor: Colors.black54,
+            unselectedItemColor: Colors.deepPurple.shade100,
             items: List.generate(2, (index) {
               var navBtnProperty = _navigationButtonProperties[index];
               return BottomNavigationBarItem(
