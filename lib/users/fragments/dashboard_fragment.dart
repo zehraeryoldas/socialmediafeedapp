@@ -36,7 +36,7 @@ class _DashboardOfFragmentState extends State<DashboardOfFragment> {
     return Scaffold(
         body: _fragmentScreen[_indexNumber],
         bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: Colors.black,
+            backgroundColor: Colors.white,
             currentIndex: _indexNumber,
             onTap: (value) {
               setState(() {
